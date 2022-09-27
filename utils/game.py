@@ -41,10 +41,9 @@ class Hangman():
         #Initiate variable for counting the number of correctly guessed letters.
         self.success_count = 0
 
-
     def play(self):
         """
-        The games' sequence of play.\n
+        The game's sequence of play.\n
         The player is asked to guess a letter.\n
         The input is checked for validity.\n
         The guessed letter is checked against the letters in the secret word.\n
@@ -54,27 +53,39 @@ class Hangman():
         #Ask the player to guess a letter.
         self.guessed_letter = input("Please guess a letter: ")
 
-        #Check for the validity of the input, indicate if the letter was already proposed and then check if the letter belongs to the secret word or not.
+        #Check for the validity of the input and if the letter was already proposed or not.
         if len(self.guessed_letter) !=1:
             print("Please enter 1 letter only")
         elif self.guessed_letter.isalpha() == False:
-            print("Please enter 1 LETTER")
+            print("Please enter 1 letter")
         elif self.guessed_letter in self.already_guessed_letters:
             print("You already guessed this letter!")
         else:
-            if self.guessed_letter in self.word_to_find:
-                self.correctly_guessed_letters.append(self.guessed_letter)
-                print("Bravo! Good guess!")
-            else:
-                self.wrongly_guessed_letters.append(self.guessed_letter)
-                print("Sorry, wrong guess!")
-                self.error_count += 1
-                self.lives -= 1
+            self.check_guessed_letter()
         self.turn_count +=1
 
         self.already_guessed_letters = self.correctly_guessed_letters + self.wrongly_guessed_letters
 
-        #Display correctly guessed letters and underscore characters for remaining letters of the secret word.
+        self.success_counter()
+        self.print_results()
+
+    def check_guessed_letter(self):
+        """
+        Function checking if the letter belongs to the secret word or not.\n
+        """
+        if self.guessed_letter in self.word_to_find:
+            self.correctly_guessed_letters.append(self.guessed_letter)
+            print("Bravo! Good guess!")
+        else:
+            self.wrongly_guessed_letters.append(self.guessed_letter)
+            print("Sorry, wrong guess!")
+            self.error_count += 1
+            self.lives -= 1
+
+    def success_counter(self):
+        """
+        Function to display correctly guessed letters and underscore characters for remaining letters of the secret word.\n
+        """
         self.success_count = 0
         for letter in self.word_to_find:
             if letter in self.correctly_guessed_letters:
@@ -83,16 +94,17 @@ class Hangman():
             else:
                 print("_", end = " ")
 
+    def print_results(self):
+        """
+        Function to print the results.\n
+        """
         print("")
-        print("well_guessed_letters: ", self.correctly_guessed_letters)
-        print("bad_guessed_letters: ", self.wrongly_guessed_letters)
-        print("Error_count: ", self.error_count)
-        print("Success_count: ", self.success_count)
-        print("Remaining_lives: ", self.lives)
-        print("Turn_count :", self.turn_count)
-
-        #Condition to call the well_played() function.
-
+        print("Good guesses: ", self.correctly_guessed_letters)
+        print("Bad guesses: ", self.wrongly_guessed_letters)
+        print("Turns played :", self.turn_count)
+        print("Successes: ", self.success_count)
+        print("Errors: ", self.error_count)
+        print("Remaining lives: ", self.lives)
 
     def game_over(self):
         """
@@ -109,8 +121,7 @@ class Hangman():
         Prints the secret word, number of turns played and number of errors made.\n
         Exits the game.\n 
         """
-        print(f"You found the word: {self.word_to_find} in {self.turn_count} turns with {self.error_count} errors!")
-        print("Bravo")
+        print(f"Bravo! You found the word {self.word_to_find} in {self.turn_count} turns with {self.error_count} errors!")
         exit()
 
     def start_game(self):
