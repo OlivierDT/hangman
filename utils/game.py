@@ -92,8 +92,6 @@ class Hangman():
         print("Turn_count :", self.turn_count)
 
         #Condition to call the well_played() function.
-        if self.success_count == len(self.word_to_find):
-            self.well_played()
 
 
     def game_over(self):
@@ -124,7 +122,9 @@ class Hangman():
         for letter in self.word_to_find:
             print("_", end=" ")
 
-        while self.lives > 0:
+        while self.lives > 0 and self.success_count < len(self.word_to_find):
             self.play()
+        if self.success_count == len(self.word_to_find):
+            self.well_played()
         else:
             self.game_over()
